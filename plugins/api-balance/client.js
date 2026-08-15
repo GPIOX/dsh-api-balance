@@ -1,9 +1,10 @@
-// 动态 Cordis 插件 apibal-1 的 Client 半部分（code.client 参数原文，pkg-5）
+// 动态 Cordis 插件 apibal-1 的 Client 半部分（code.client 参数原文，pkg-6）
 // pkg-3：余额徽章迁移至全局悬浮层（shell.overlay），支持按住拖动改变位置、
 // 拖拽右下角手柄自由缩放（0.7x–2.5x）；设置页提供 显示开关 / 大小滑块 / 重置。
 // pkg-4：徽章改用主题 token（--dsw-alias-bg-overlay / --dsw-alias-label-primary）。
-// pkg-5：恢复半透明亚克力底色（主题色 55% + blur + saturate），文字颜色按徽章
-// 下方内容的背景亮度自动切换（elementsFromPoint 采样，约 1.5s 重采样 + 拖动结束即采样）。
+// pkg-5：半透明亚克力底色 + 文字颜色按下方内容明暗自动切换。
+// pkg-6：恢复 pkg-3 原版亚克力质感（rgba(128,128,128,0.14) + blur(8px)，
+// 无 saturate、无阴影），保留 pkg-5 的文字明暗自适应。
 return {
   inject: ['timer'],
   apply(ctx) {
@@ -11,7 +12,7 @@ return {
     if (slots === undefined) return
 
     styles.insert([
-      '.apibal-float{position:fixed;z-index:60;display:inline-flex;align-items:center;gap:0.5em;padding:0.5em 0.8em;border-radius:10px;background:color-mix(in srgb, var(--dsw-alias-bg-overlay, #ffffff) 55%, transparent);border:1px solid color-mix(in srgb, var(--dsw-alias-border-l2, rgba(128,128,128,0.4)) 60%, transparent);backdrop-filter:blur(12px) saturate(180%);-webkit-backdrop-filter:blur(12px) saturate(180%);box-shadow:0 2px 12px rgba(0,0,0,0.15);cursor:grab;user-select:none;-webkit-user-select:none;touch-action:none;font-family:inherit;max-width:70vw;}',
+      '.apibal-float{position:fixed;z-index:60;display:inline-flex;align-items:center;gap:0.5em;padding:0.5em 0.8em;border-radius:10px;background:rgba(128,128,128,0.14);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(128,128,128,0.3);color:inherit;cursor:grab;user-select:none;-webkit-user-select:none;touch-action:none;font-family:inherit;max-width:70vw;}',
       '.apibal-float:active{cursor:grabbing;}',
       '.apibal-on-dark{color:#f4f4f5;}',
       '.apibal-on-light{color:#1b1b1f;}',
