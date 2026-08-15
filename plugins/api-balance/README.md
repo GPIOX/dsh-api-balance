@@ -15,6 +15,6 @@
 
 ## 更新
 
-修改代码后：`cordis_define`（`kind: "existing"`，`pluginId: "apibal-1"`）追加新 Package → `cordis_run`（`mode: "update"`）。仓库根 README 的「版本演进」表记录了 pkg 与 git 提交的对应关系。
+修改代码后：`cordis_define`（`kind: "existing"`，`pluginId: "apibal-1"`）追加新 Package → `cordis_run`（`mode: "update"`）。
 
-完整介绍见仓库根目录 [README](../../README.md)。
+完整介绍见仓库根目录 [README](../../README.md)（English）/ [README.zh-CN](../../README.zh-CN.md)（中文）。
