@@ -69,6 +69,7 @@ window.__ModuleLoader__.load({ id: "dsh-api-balance", factory: (require) => {
       scale: 1,
       visible: true,
       bgKind: null,
+      refreshSec: 60,
     };
     var listeners = [];
     function setState(patch) {
@@ -257,12 +258,19 @@ window.__ModuleLoader__.load({ id: "dsh-api-balance", factory: (require) => {
         }
         boot();
         var t1 = ctx.timeout(function () { detectScheme(); }, 300);
-        var dispose = ctx.interval(function () { detectScheme(); }, 1500);
+        var sampleDispose = ctx.interval(function () { detectScheme(); }, 1500);
         return function () {
           t1();
-          dispose();
+          sampleDispose();
         };
       }, []);
+      React.useEffect(function () {
+        var secs = Math.max(30, Math.round(Number(state.refreshSec) || 60));
+        var balanceDispose = ctx.interval(function () {
+          if (state.status[state.provider]) refresh();
+        }, secs * 1000);
+        return balanceDispose;
+      }, [state.refreshSec]);
       var cls = "apibal-float"
         + (state.bgKind === "dark" ? " apibal-on-dark" : state.bgKind === "light" ? " apibal-on-light" : "");
       return React.createElement("div", {
@@ -379,7 +387,22 @@ window.__ModuleLoader__.load({ id: "dsh-api-balance", factory: (require) => {
             type: "button",
             disabled: state.loading,
             onClick: function () { refresh(); },
-          }, state.loading ? "查询中…" : "立即刷新")),
+          }, state.loading ? "查询中…" : "立即刷新"),
+          React.createElement("span", { className: "apibal-label", style: { minWidth: "0" } }, "自动刷新间隔"),
+          React.createElement("input", {
+            className: "apibal-input",
+            type: "number",
+            min: "30",
+            step: "10",
+            value: String(state.refreshSec),
+            style: { flex: "0 0 96px", minWidth: "0" },
+            onChange: function (e) {
+              var v = Number(e.target.value);
+              var secs = Number.isFinite(v) ? Math.max(30, Math.round(v)) : 60;
+              setState({ refreshSec: secs });
+            },
+          }),
+          React.createElement("span", { className: "apibal-hint" }, "秒（最短 30 秒）")),
       );
 
       if (state.error) {
@@ -427,7 +450,7 @@ window.__ModuleLoader__.load({ id: "dsh-api-balance", factory: (require) => {
             onClick: function () { setState({ pos: { x: 12, y: 12 }, scale: 1 }); },
           }, "重置位置与大小")),
         React.createElement("div", { key: "hint3", className: "apibal-hint" },
-          "徽章悬浮在页面上方：按住拖动改变位置，拖拽右下角手柄自由缩放，点击刷新余额。文字颜色会随下方内容明暗自动切换。"),
+          "徽章悬浮在页面上方：按住拖动改变位置，拖拽右下角手柄自由缩放，点击刷新余额（默认每 1 分钟自动刷新，可在「余额」区自定义间隔，最短 30 秒）。文字颜色会随下方内容明暗自动切换。"),
       );
 
       return React.createElement("div", { className: "apibal-wrap" }, children);

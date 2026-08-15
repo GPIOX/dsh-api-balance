@@ -24,7 +24,7 @@
 - **Free resizing**: pull the bottom-right handle, 70% – 250%
 - **Acrylic texture**: translucent neutral tint + backdrop blur + fine border, blends naturally with light and dark skins
 - **Adaptive text color**: samples the brightness of the content beneath in real time — light text on dark backgrounds, dark text on light backgrounds
-- **Click to refresh + auto refresh**: one tap refreshes immediately; also refreshes every 10 minutes
+- **Click to refresh + auto refresh**: one tap refreshes immediately; also auto-refreshes every minute by default (interval configurable in Settings › API Balance, minimum 30 seconds)
 - **Multi-provider**: DeepSeek, Moonshot (Kimi), OpenAI, or any custom endpoint
 - **Key safety**: API keys live in the Harness credential store (`~/.dsh/.credentials.yaml`) and are never sent back to the browser; requests pass the key to `curl` via environment variable, never on the command line
 - **Settings page**: configure provider & key, see balance details (total / granted / topped-up / available / used), toggle badge visibility, size slider, and position reset — under Settings › API Balance
