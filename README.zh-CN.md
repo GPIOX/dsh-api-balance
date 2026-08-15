@@ -29,31 +29,23 @@
 - **密钥安全**：密钥保存在 Harness 凭据库（`~/.dsh/.credentials.yaml`），绝不回传页面；请求经 `curl` 以环境变量传递密钥，不出现在命令行
 - **设置面板**：在 设置 › API 余额 中配置平台与密钥、查看余额明细（总余额/赠送/充值/可用/已用）、控制徽章显示/大小/重置
 
-## 📦 正式安装（推荐）
+## 📦 正式安装（一键）
 
-本仓库同时是一个标准的 **DSH 插件包**（`dsh.profile.bundles` 协议，与插件市场同一机制）。
+一条命令即可把插件装进你的 DSH `web` profile 并自动注册（`dsh plugin` 会自动同步 `dsh.profile.bundles`）：
 
 ```bash
-git clone https://github.com/GPIOX/dsh-api-balance.git
-cd ~/.dsh/profiles/web
-pnpm add link:/绝对路径/dsh-api-balance
+dsh plugin --profile web add github:GPIOX/dsh-api-balance
 ```
 
-然后编辑 `~/.dsh/profiles/web/package.json`，把 `"dsh-api-balance"` 加入 `dsh.profile.bundles`：
+然后重启 DSH（关闭 `dsh` 进程后重新运行，例如 `dsh web`），刷新页面，打开 设置 › **API 余额** 保存密钥——悬浮徽章即刻显示余额。
 
-```json
-{
-  "dsh": {
-    "profile": {
-      "bundles": ["@deepseek-ai/dsh-base", "@deepseek-ai/dsh-web-app", "dsh-api-balance"]
-    }
-  }
-}
+卸载 / 回滚：
+
+```bash
+dsh plugin --profile web remove dsh-api-balance
 ```
 
-重启 DSH（关闭 `dsh` 进程后重新运行，例如 `dsh web`），刷新页面，打开 设置 › **API 余额** 保存密钥——悬浮徽章即刻显示余额。
-
-> 回滚：把 `"dsh-api-balance"` 从 `bundles` 移除（可顺带 `pnpm remove dsh-api-balance`）并再次重启。
+> 也可以等插件收录进 [awesome-dsh-plugin](https://awesome-dsh-plugin.com) 目录后，在应用内**插件市场**一键安装；本地开发调试可用 `dsh plugin --profile web add link:/路径/dsh-api-balance`。
 
 ### ⚡ 零安装体验（动态插件）
 

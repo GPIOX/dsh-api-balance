@@ -31,29 +31,21 @@
 
 ## 📦 Installation
 
-This repo is a standard **DSH plugin package** (`dsh.profile.bundles` protocol — the same mechanism the DSH plugin market uses).
+One command installs the plugin into your DSH `web` profile and registers it automatically (`dsh plugin` reconciles `dsh.profile.bundles` for you):
 
 ```bash
-git clone https://github.com/GPIOX/dsh-api-balance.git
-cd ~/.dsh/profiles/web
-pnpm add link:/absolute/path/to/dsh-api-balance
+dsh plugin --profile web add github:GPIOX/dsh-api-balance
 ```
 
-Then edit `~/.dsh/profiles/web/package.json` and add `"dsh-api-balance"` to `dsh.profile.bundles`:
+Then restart DSH (stop the `dsh` process and run it again, e.g. `dsh web`), refresh the page, and open **Settings › API Balance** to save your key — the badge shows up immediately.
 
-```json
-{
-  "dsh": {
-    "profile": {
-      "bundles": ["@deepseek-ai/dsh-base", "@deepseek-ai/dsh-web-app", "dsh-api-balance"]
-    }
-  }
-}
+Uninstall / rollback:
+
+```bash
+dsh plugin --profile web remove dsh-api-balance
 ```
 
-Restart DSH (stop the `dsh` process and run it again, e.g. `dsh web`), refresh the page, then open **Settings › API Balance** to save your key — the badge shows up immediately.
-
-> Rollback: remove `"dsh-api-balance"` from `bundles` (optionally `pnpm remove dsh-api-balance`) and restart again.
+> Also installable from the in-app **Market** (Settings › Plugins/Market) once listed in the [awesome-dsh-plugin](https://awesome-dsh-plugin.com) registry, or from a local checkout during development: `dsh plugin --profile web add link:/path/to/dsh-api-balance`.
 
 ### ⚡ Zero-install quick start (dynamic plugin)
 
