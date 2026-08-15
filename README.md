@@ -44,10 +44,10 @@ Then restart DSH (stop the `dsh` process and run it again, e.g. `dsh web`), refr
 Uninstall / rollback:
 
 ```bash
-dsh plugin --profile web remove dsh-api-balance
+dsh plugin --profile web remove dsh-api-balance-badge
 ```
 
-> The in-app Market (Settings › Plugins/Market) can install it too once it is listed in the [awesome-dsh-plugin](https://awesome-dsh-plugin.com) registry. For local development: `dsh plugin --profile web add link:/path/to/dsh-api-balance`.
+> The in-app Market (Settings › Plugins/Market) can install it too once it is listed in the [awesome-dsh-plugin](https://awesome-dsh-plugin.com) registry. For local development: `dsh plugin --profile web add link:/path/to/dsh-api-balance-badge`.
 
 ### Zero-install quick start (dynamic plugin)
 
@@ -81,7 +81,7 @@ If you would rather not touch your profile, paste the plugin into any DSH Web GU
 ```
 .
 ├── assets/                  # README screenshots (badge renders, no real UI content)
-├── lib/index.js             # Host half: /dsh-api-balance/* HTTP routes + credential handling
+├── lib/index.js             # Host half: /dsh-api-balance-badge/* HTTP routes + credential handling
 ├── client/client.js         # Client half: floating badge + settings page (factory bundle)
 ├── cordis.patch.yml         # Bundle patch inserting this plugin into a profile
 ├── package.json             # DSH plugin package manifest (dsh.bundle / dsh.client)

@@ -1,16 +1,16 @@
 /**
- * dsh-api-balance client bundle (built factory form, served under /plugins).
+ * dsh-api-balance-badge client bundle (built factory form, served under /plugins).
  * The only external module is the app shell's static `react` entry.
  * Talks to the host half over the package's own HTTP routes
- * (/dsh-api-balance/*); the API key never crosses the wire back to the page.
+ * (/dsh-api-balance-badge/*); the API key never crosses the wire back to the page.
  */
-window.__ModuleLoader__.load({ id: "dsh-api-balance", factory: (require) => {
+window.__ModuleLoader__.load({ id: "dsh-api-balance-badge", factory: (require) => {
   var module = { exports: {} };
   var exports = module.exports;
   Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
   var React = require("react");
 
-  var name = "dsh-api-balance";
+  var name = "dsh-api-balance-badge";
   var inject = ["slots", "timer"];
 
   function apply(ctx) {
@@ -95,7 +95,7 @@ window.__ModuleLoader__.load({ id: "dsh-api-balance", factory: (require) => {
     function api(method, path, body) {
       var init = { method: method, headers: { "content-type": "application/json" } };
       if (body !== undefined) init.body = JSON.stringify(body);
-      return fetch("/dsh-api-balance" + path, init).then(function (r) { return r.json(); });
+      return fetch("/dsh-api-balance-badge" + path, init).then(function (r) { return r.json(); });
     }
 
     var badgeEl = null;

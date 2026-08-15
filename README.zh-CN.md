@@ -44,10 +44,10 @@ dsh plugin --profile web add https://github.com/GPIOX/dsh-api-balance/archive/re
 卸载 / 回滚：
 
 ```bash
-dsh plugin --profile web remove dsh-api-balance
+dsh plugin --profile web remove dsh-api-balance-badge
 ```
 
-> 等插件进了 [awesome-dsh-plugin](https://awesome-dsh-plugin.com) 目录，也可以在应用内的插件市场里一键安装。本地开发用 `dsh plugin --profile web add link:/路径/dsh-api-balance`。
+> 等插件进了 [awesome-dsh-plugin](https://awesome-dsh-plugin.com) 目录，也可以在应用内的插件市场里一键安装。本地开发用 `dsh plugin --profile web add link:/路径/dsh-api-balance-badge`。
 
 ### 零安装体验（动态插件）
 
@@ -81,7 +81,7 @@ dsh plugin --profile web remove dsh-api-balance
 ```
 .
 ├── assets/                  # README 效果图（徽章展示图，无真实界面内容）
-├── lib/index.js             # Host 半部分：/dsh-api-balance/* HTTP 路由 + 凭据托管
+├── lib/index.js             # Host 半部分：/dsh-api-balance-badge/* HTTP 路由 + 凭据托管
 ├── client/client.js         # Client 半部分：悬浮徽章 + 设置页（工厂打包形式）
 ├── cordis.patch.yml         # bundle 补丁：把本插件插入 profile 组合
 ├── package.json             # DSH 插件包清单（dsh.bundle / dsh.client）
