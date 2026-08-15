@@ -2,9 +2,9 @@
 
 在 DeepSeek Harness Web GUI 中显示大模型 API 平台的账户余额。
 
-- 运行时对象：动态 Cordis 插件 `apibal-1`（当前版本 `pkg-2`）
+- 运行时对象：动态 Cordis 插件 `apibal-1`（当前版本 `pkg-3`）
 - Host 半部分：`host.js` —— 通过 `shell` 服务执行 `curl` 查询余额接口，密钥经环境变量传入，并托管于 Harness 凭据库（`~/.dsh/.credentials.yaml`）
-- Client 半部分：`client.js` —— 设置页（`settings.section` 新增「API 余额」页）+ 侧边栏底部常驻余额徽章（`sidebar.footer.action`）
+- Client 半部分：`client.js` —— 设置页（`settings.section` 新增「API 余额」页）+ 全局悬浮余额徽章（`shell.overlay`，可拖动、可缩放）
 
 ## 支持平台
 

@@ -1,4 +1,6 @@
-// 动态 Cordis 插件 apibal-1 的 Client 半部分（code.client 参数原文，pkg-2）
+// 动态 Cordis 插件 apibal-1 的 Client 半部分（code.client 参数原文，pkg-3）
+// pkg-3：余额徽章迁移至全局悬浮层（shell.overlay），支持按住拖动改变位置、
+// 拖拽右下角手柄自由缩放（0.7x–2.5x）；设置页提供 显示开关 / 大小滑块 / 重置。
 return {
   inject: ['timer'],
   apply(ctx) {
@@ -6,12 +8,12 @@ return {
     if (slots === undefined) return
 
     styles.insert([
-      '.apibal-chip{display:inline-flex;align-items:center;gap:8px;cursor:pointer;border:none;background:transparent;color:inherit;font-size:15px;padding:7px 10px;border-radius:8px;font-family:inherit;margin-left:-12px;}',
-      '.apibal-chip:hover{background:rgba(128,128,128,0.14);}',
-      '.apibal-chip-wide{padding:9px 14px;margin-left:-12px;}',
-      '.apibal-ico{font-size:19px;line-height:1;}',
-      '.apibal-txt{font-weight:600;font-variant-numeric:tabular-nums;font-size:15px;}',
-      '.apibal-prov{opacity:0.6;font-size:13px;}',
+      '.apibal-float{position:fixed;z-index:60;display:inline-flex;align-items:center;gap:0.5em;padding:0.5em 0.8em;border-radius:10px;background:rgba(128,128,128,0.14);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(128,128,128,0.3);color:inherit;cursor:grab;user-select:none;-webkit-user-select:none;touch-action:none;font-family:inherit;max-width:70vw;}',
+      '.apibal-float:active{cursor:grabbing;}',
+      '.apibal-ico{font-size:1.3em;line-height:1;}',
+      '.apibal-txt{font-weight:600;font-variant-numeric:tabular-nums;font-size:1em;white-space:nowrap;}',
+      '.apibal-prov{opacity:0.6;font-size:0.8em;white-space:nowrap;}',
+      '.apibal-resize{position:absolute;right:-5px;bottom:-5px;width:14px;height:14px;cursor:nwse-resize;touch-action:none;border-right:2px solid rgba(128,128,128,0.8);border-bottom:2px solid rgba(128,128,128,0.8);border-bottom-right-radius:4px;}',
       '.apibal-wrap{display:flex;flex-direction:column;gap:14px;padding:14px 2px;max-width:560px;font-size:13px;}',
       '.apibal-h{font-size:13px;font-weight:600;margin:0;opacity:0.85;}',
       '.apibal-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}',
@@ -45,6 +47,9 @@ return {
       customUrl: '',
       customPath: 'balance',
       customCurrency: 'CNY',
+      pos: { x: 12, y: 12 },
+      scale: 1,
+      visible: true,
     }
     const listeners = []
     function setState(patch) {
@@ -57,6 +62,36 @@ return {
         const i = listeners.indexOf(fn)
         if (i >= 0) listeners.splice(i, 1)
       }
+    }
+
+    let dragMoved = false
+    function beginDrag(e, kind) {
+      if (e.pointerType === 'mouse' && e.button !== 0) return
+      const el = e.currentTarget
+      try { el.setPointerCapture(e.pointerId) } catch (err) { /* ignore */ }
+      const startX = e.clientX
+      const startY = e.clientY
+      const origX = state.pos.x
+      const origY = state.pos.y
+      const scale0 = state.scale
+      function move(ev) {
+        const dx = ev.clientX - startX
+        const dy = ev.clientY - startY
+        if (kind === 'resize') {
+          setState({ scale: Math.min(2.5, Math.max(0.7, scale0 + (dx - dy) / 180)) })
+        } else {
+          if (Math.abs(dx) + Math.abs(dy) > 4) dragMoved = true
+          setState({ pos: { x: origX + dx, y: origY - dy } })
+        }
+      }
+      function up() {
+        el.removeEventListener('pointermove', move)
+        el.removeEventListener('pointerup', up)
+        el.removeEventListener('pointercancel', up)
+      }
+      el.addEventListener('pointermove', move)
+      el.addEventListener('pointerup', up)
+      el.addEventListener('pointercancel', up)
     }
 
     async function loadStatus() {
@@ -138,9 +173,9 @@ return {
       return '适用于中转站等自建接口：填接口地址与 JSON 字段路径（如 data.balance 或 balance_infos[0].total_balance）'
     }
 
-    function BalanceChip(props) {
+    function FloatingBadge() {
       useStore()
-      const wide = !!(props && props.wide)
+      if (!state.visible) return null
       const result = state.result
       const label = PROVIDER_LABELS[state.provider] || state.provider
       const text = result && result.total != null
@@ -148,7 +183,7 @@ return {
         : (state.loading ? '查询中…' : '未配置')
       const title = state.error
         ? 'API 余额（' + label + '）：' + state.error + '\n点击重试'
-        : 'API 余额（' + label + '）：' + text + '\n点击刷新，密钥在 设置 › API 余额 中配置'
+        : 'API 余额（' + label + '）：' + text + '\n按住拖动可移动位置，拖拽右下角可缩放\n点击刷新，密钥在 设置 › API 余额 中配置'
       React.useEffect(function () {
         async function boot() {
           await loadStatus()
@@ -160,19 +195,27 @@ return {
         }, 10 * 60 * 1000)
         return dispose
       }, [])
-      return React.createElement('button', {
-        className: 'apibal-chip' + (wide ? ' apibal-chip-wide' : ''),
+      return React.createElement('div', {
+        className: 'apibal-float',
+        style: {
+          left: state.pos.x + 'px',
+          bottom: state.pos.y + 'px',
+          fontSize: Math.round(15 * state.scale) + 'px',
+        },
         title: title,
-        type: 'button',
-        onClick: function () { refresh() },
+        onPointerDown: function (e) { beginDrag(e, 'move') },
+        onClick: function () {
+          if (dragMoved) { dragMoved = false; return }
+          refresh()
+        },
       },
-        wide
-          ? [
-              React.createElement('span', { key: 'i', className: 'apibal-ico' }, '💰'),
-              React.createElement('span', { key: 't', className: 'apibal-txt' }, text),
-              React.createElement('span', { key: 'p', className: 'apibal-prov' }, label),
-            ]
-          : React.createElement('span', { className: 'apibal-ico' }, '💰'))
+        React.createElement('span', { className: 'apibal-ico' }, '💰'),
+        React.createElement('span', { className: 'apibal-txt' }, text),
+        React.createElement('span', { className: 'apibal-prov' }, label),
+        React.createElement('span', {
+          className: 'apibal-resize',
+          onPointerDown: function (e) { e.stopPropagation(); beginDrag(e, 'resize') },
+        }))
     }
 
     function BalanceSettings() {
@@ -285,8 +328,36 @@ return {
         )
       }
 
-      children.push(React.createElement('div', { key: 'hint3', className: 'apibal-hint' },
-        '余额同时显示在左下角侧边栏「设置」旁的常驻徽章中，点击徽章即可刷新。'))
+      children.push(
+        React.createElement('h3', { key: 'h5', className: 'apibal-h' }, '悬浮徽章'),
+        React.createElement('div', { key: 'r6', className: 'apibal-row' },
+          React.createElement('span', { className: 'apibal-label' }, '显示徽章'),
+          React.createElement('input', {
+            type: 'checkbox',
+            checked: state.visible,
+            onChange: function (e) { setState({ visible: e.target.checked }) },
+          })),
+        React.createElement('div', { key: 'r7', className: 'apibal-row' },
+          React.createElement('span', { className: 'apibal-label' }, '徽章大小'),
+          React.createElement('input', {
+            type: 'range',
+            min: '0.7',
+            max: '2.5',
+            step: '0.1',
+            value: String(state.scale),
+            style: { flex: 1, minWidth: '140px' },
+            onChange: function (e) { setState({ scale: Number(e.target.value) }) },
+          }),
+          React.createElement('span', { className: 'apibal-hint' }, Math.round(state.scale * 100) + '%')),
+        React.createElement('div', { key: 'r8', className: 'apibal-row' },
+          React.createElement('button', {
+            className: 'apibal-btn',
+            type: 'button',
+            onClick: function () { setState({ pos: { x: 12, y: 12 }, scale: 1 }) },
+          }, '重置位置与大小')),
+        React.createElement('div', { key: 'hint3', className: 'apibal-hint' },
+          '徽章悬浮在页面上方：按住拖动改变位置，拖拽右下角手柄自由缩放，点击刷新余额。位置与大小仅在本次运行内有效。'),
+      )
 
       return React.createElement('div', { className: 'apibal-wrap' }, children)
     }
@@ -296,9 +367,9 @@ return {
       () => React.createElement(BalanceSettings),
     ))
 
-    slots.inject('sidebar.footer.action', () => slots.register(
-      { name: 'sidebar.footer.action', id: 'api-balance-chip', order: 20, label: 'API 余额' },
-      (props) => React.createElement(BalanceChip, { wide: !!(props && props.wide) }),
+    slots.inject('shell.overlay', () => slots.register(
+      { name: 'shell.overlay', id: 'api-balance-widget', order: 20, label: 'API 余额' },
+      () => React.createElement(FloatingBadge),
     ))
   },
 }
