@@ -31,11 +31,13 @@
 
 ## 📦 Installation
 
-One command installs the plugin into your DSH `web` profile and registers it automatically (`dsh plugin` reconciles `dsh.profile.bundles` for you):
+One command installs the plugin into your DSH `web` profile and registers it automatically (`dsh plugin` reconciles `dsh.profile.bundles` for you). The tarball form is plain HTTPS — no GitHub account, SSH key, or git required:
 
 ```bash
-dsh plugin --profile web add github:GPIOX/dsh-api-balance
+dsh plugin --profile web add https://github.com/GPIOX/dsh-api-balance/archive/refs/heads/main.tar.gz
 ```
+
+> Alternative git-based form (resolves through your local git configuration): `dsh plugin --profile web add github:GPIOX/dsh-api-balance`.
 
 Then restart DSH (stop the `dsh` process and run it again, e.g. `dsh web`), refresh the page, and open **Settings › API Balance** to save your key — the badge shows up immediately.
 

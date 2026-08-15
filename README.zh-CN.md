@@ -31,11 +31,13 @@
 
 ## 📦 正式安装（一键）
 
-一条命令即可把插件装进你的 DSH `web` profile 并自动注册（`dsh plugin` 会自动同步 `dsh.profile.bundles`）：
+一条命令即可把插件装进你的 DSH `web` profile 并自动注册（`dsh plugin` 会自动同步 `dsh.profile.bundles`）。tarball 形式是纯 HTTPS 下载——无需 GitHub 账号、SSH key 或 git：
 
 ```bash
-dsh plugin --profile web add github:GPIOX/dsh-api-balance
+dsh plugin --profile web add https://github.com/GPIOX/dsh-api-balance/archive/refs/heads/main.tar.gz
 ```
+
+> 另一种基于 git 的写法（经你本机 git 配置解析）：`dsh plugin --profile web add github:GPIOX/dsh-api-balance`。
 
 然后重启 DSH（关闭 `dsh` 进程后重新运行，例如 `dsh web`），刷新页面，打开 设置 › **API 余额** 保存密钥——悬浮徽章即刻显示余额。
 
