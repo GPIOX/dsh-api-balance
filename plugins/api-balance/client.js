@@ -1,6 +1,8 @@
-// 动态 Cordis 插件 apibal-1 的 Client 半部分（code.client 参数原文，pkg-3）
+// 动态 Cordis 插件 apibal-1 的 Client 半部分（code.client 参数原文，pkg-4）
 // pkg-3：余额徽章迁移至全局悬浮层（shell.overlay），支持按住拖动改变位置、
 // 拖拽右下角手柄自由缩放（0.7x–2.5x）；设置页提供 显示开关 / 大小滑块 / 重置。
+// pkg-4：徽章改用主题 token（--dsw-alias-bg-overlay / --dsw-alias-label-primary），
+// 近不透明弹层底色，深浅色主题及任意底色内容上均清晰可读。
 return {
   inject: ['timer'],
   apply(ctx) {
@@ -8,12 +10,12 @@ return {
     if (slots === undefined) return
 
     styles.insert([
-      '.apibal-float{position:fixed;z-index:60;display:inline-flex;align-items:center;gap:0.5em;padding:0.5em 0.8em;border-radius:10px;background:rgba(128,128,128,0.14);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(128,128,128,0.3);color:inherit;cursor:grab;user-select:none;-webkit-user-select:none;touch-action:none;font-family:inherit;max-width:70vw;}',
+      '.apibal-float{position:fixed;z-index:60;display:inline-flex;align-items:center;gap:0.5em;padding:0.5em 0.8em;border-radius:10px;background:var(--dsw-alias-bg-overlay, #1b1b1f);background:color-mix(in srgb, var(--dsw-alias-bg-overlay, #1b1b1f) 94%, transparent);color:var(--dsw-alias-label-primary, #f4f4f5);border:1px solid var(--dsw-alias-border-l2, rgba(128,128,128,0.45));box-shadow:0 2px 12px rgba(0,0,0,0.18);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);cursor:grab;user-select:none;-webkit-user-select:none;touch-action:none;font-family:inherit;max-width:70vw;}',
       '.apibal-float:active{cursor:grabbing;}',
       '.apibal-ico{font-size:1.3em;line-height:1;}',
       '.apibal-txt{font-weight:600;font-variant-numeric:tabular-nums;font-size:1em;white-space:nowrap;}',
-      '.apibal-prov{opacity:0.6;font-size:0.8em;white-space:nowrap;}',
-      '.apibal-resize{position:absolute;right:-5px;bottom:-5px;width:14px;height:14px;cursor:nwse-resize;touch-action:none;border-right:2px solid rgba(128,128,128,0.8);border-bottom:2px solid rgba(128,128,128,0.8);border-bottom-right-radius:4px;}',
+      '.apibal-prov{opacity:0.62;font-size:0.8em;white-space:nowrap;}',
+      '.apibal-resize{position:absolute;right:-5px;bottom:-5px;width:14px;height:14px;cursor:nwse-resize;touch-action:none;border-right:2px solid var(--dsw-alias-label-secondary, rgba(244,244,245,0.7));border-bottom:2px solid var(--dsw-alias-label-secondary, rgba(244,244,245,0.7));border-bottom-right-radius:4px;}',
       '.apibal-wrap{display:flex;flex-direction:column;gap:14px;padding:14px 2px;max-width:560px;font-size:13px;}',
       '.apibal-h{font-size:13px;font-weight:600;margin:0;opacity:0.85;}',
       '.apibal-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}',
