@@ -29,9 +29,35 @@
 - **Key safety**: API keys live in the Harness credential store (`~/.dsh/.credentials.yaml`) and are never sent back to the browser; requests pass the key to `curl` via environment variable, never on the command line
 - **Settings page**: configure provider & key, see balance details (total / granted / topped-up / available / used), toggle badge visibility, size slider, and position reset — under Settings › API Balance
 
-## 🚀 Getting Started
+## 📦 Installation
 
-This is a **dynamic Cordis plugin** for DSH — no build step, no restart. In any DSH Web GUI session:
+This repo is a standard **DSH plugin package** (`dsh.profile.bundles` protocol — the same mechanism the DSH plugin market uses).
+
+```bash
+git clone https://github.com/GPIOX/dsh-api-balance.git
+cd ~/.dsh/profiles/web
+pnpm add link:/absolute/path/to/dsh-api-balance
+```
+
+Then edit `~/.dsh/profiles/web/package.json` and add `"dsh-api-balance"` to `dsh.profile.bundles`:
+
+```json
+{
+  "dsh": {
+    "profile": {
+      "bundles": ["@deepseek-ai/dsh-base", "@deepseek-ai/dsh-web-app", "dsh-api-balance"]
+    }
+  }
+}
+```
+
+Restart DSH (stop the `dsh` process and run it again, e.g. `dsh web`), refresh the page, then open **Settings › API Balance** to save your key — the badge shows up immediately.
+
+> Rollback: remove `"dsh-api-balance"` from `bundles` (optionally `pnpm remove dsh-api-balance`) and restart again.
+
+### ⚡ Zero-install quick start (dynamic plugin)
+
+Prefer not to touch your profile? Paste the plugin into any DSH Web GUI session as a dynamic plugin — no build, no restart:
 
 1. Call the `cordis_define` tool (`kind: "new"`, any 3–6 letter prefix) and paste
    [`plugins/api-balance/host.js`](plugins/api-balance/host.js) / [`plugins/api-balance/client.js`](plugins/api-balance/client.js)
@@ -61,10 +87,14 @@ This is a **dynamic Cordis plugin** for DSH — no build step, no restart. In an
 ```
 .
 ├── assets/                  # README screenshots (badge renders, no real UI content)
-├── plugins/api-balance/
-│   ├── host.js              # code.host: balance fetching + credential handling
-│   ├── client.js            # code.client: floating badge + settings page
-│   └── README.md            # source structure notes
+├── lib/index.js             # Host half: /dsh-api-balance/* HTTP routes + credential handling
+├── client/client.js         # Client half: floating badge + settings page (factory bundle)
+├── cordis.patch.yml         # Bundle patch inserting this plugin into a profile
+├── package.json             # DSH plugin package manifest (dsh.bundle / dsh.client)
+├── plugins/api-balance/     # Same halves as dynamic-plugin sources (zero-install path)
+│   ├── host.js
+│   ├── client.js
+│   └── README.md
 ├── LICENSE                  # MIT
 ├── README.md                # this file (English)
 └── README.zh-CN.md          # 中文文档

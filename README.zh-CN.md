@@ -29,9 +29,35 @@
 - **密钥安全**：密钥保存在 Harness 凭据库（`~/.dsh/.credentials.yaml`），绝不回传页面；请求经 `curl` 以环境变量传递密钥，不出现在命令行
 - **设置面板**：在 设置 › API 余额 中配置平台与密钥、查看余额明细（总余额/赠送/充值/可用/已用）、控制徽章显示/大小/重置
 
-## 🚀 快速开始
+## 📦 正式安装（推荐）
 
-本插件是 **DSH 动态 Cordis 插件**（进程内插件，无需构建或重启）。在任意 DSH Web GUI 会话中：
+本仓库同时是一个标准的 **DSH 插件包**（`dsh.profile.bundles` 协议，与插件市场同一机制）。
+
+```bash
+git clone https://github.com/GPIOX/dsh-api-balance.git
+cd ~/.dsh/profiles/web
+pnpm add link:/绝对路径/dsh-api-balance
+```
+
+然后编辑 `~/.dsh/profiles/web/package.json`，把 `"dsh-api-balance"` 加入 `dsh.profile.bundles`：
+
+```json
+{
+  "dsh": {
+    "profile": {
+      "bundles": ["@deepseek-ai/dsh-base", "@deepseek-ai/dsh-web-app", "dsh-api-balance"]
+    }
+  }
+}
+```
+
+重启 DSH（关闭 `dsh` 进程后重新运行，例如 `dsh web`），刷新页面，打开 设置 › **API 余额** 保存密钥——悬浮徽章即刻显示余额。
+
+> 回滚：把 `"dsh-api-balance"` 从 `bundles` 移除（可顺带 `pnpm remove dsh-api-balance`）并再次重启。
+
+### ⚡ 零安装体验（动态插件）
+
+不想动 profile？可以在任意 DSH Web GUI 会话中直接粘贴为动态插件，无需构建或重启：
 
 1. 使用工具 `cordis_define` 创建插件（`kind: "new"`，任意 3–6 位字母前缀），把本仓库的
    [`plugins/api-balance/host.js`](plugins/api-balance/host.js) 与 [`plugins/api-balance/client.js`](plugins/api-balance/client.js)
@@ -61,10 +87,14 @@
 ```
 .
 ├── assets/                  # README 效果图（徽章展示图，无真实界面内容）
-├── plugins/api-balance/
-│   ├── host.js              # code.host：余额查询、凭据托管
-│   ├── client.js            # code.client：悬浮徽章 + 设置页
-│   └── README.md            # 源码结构说明
+├── lib/index.js             # Host 半部分：/dsh-api-balance/* HTTP 路由 + 凭据托管
+├── client/client.js         # Client 半部分：悬浮徽章 + 设置页（工厂打包形式）
+├── cordis.patch.yml         # bundle 补丁：把本插件插入 profile 组合
+├── package.json             # DSH 插件包清单（dsh.bundle / dsh.client）
+├── plugins/api-balance/     # 同样两个半部分的动态插件源码（零安装路径）
+│   ├── host.js
+│   ├── client.js
+│   └── README.md
 ├── LICENSE                  # MIT
 ├── README.md                # English
 └── README.zh-CN.md          # 中文文档（本文件）
