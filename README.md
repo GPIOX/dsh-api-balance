@@ -20,14 +20,13 @@
 ## Features
 
 - Floats in a frame-wide overlay above every column. Click-through, so it never blocks the app underneath.
-- Drag it anywhere on screen.
-- Resizable from 70% to 250% with the bottom-right handle.
+- One badge per configured provider. Drag each one anywhere and resize it from 70% to 250% with its bottom-right handle.
 - Frosted-glass look: translucent neutral tint, backdrop blur, a thin border. Reads fine on light and dark skins.
-- Text color follows the brightness of the content beneath it, light text over dark areas and dark text over light ones. The badge samples this every 1.5 seconds.
-- Click the badge to refresh, or let it refresh itself every minute by default. The interval is configurable in Settings › API Balance, down to 30 seconds.
-- Works with DeepSeek, Moonshot (Kimi), OpenAI, or any custom endpoint.
-- API keys stay in the Harness credential store (`~/.dsh/.credentials.yaml`) and never reach the browser. curl gets the key through an environment variable, not the command line.
-- The settings page covers provider and key setup, balance details (total, granted, topped-up, available, used), badge visibility, size, and position reset.
+- Text color follows the brightness of the content beneath each badge, light text over dark areas and dark text over light ones. Sampled every 1.5 seconds.
+- Balance providers (DeepSeek, Moonshot, OpenAI, custom endpoint) show the currency balance. OpenCode Go shows its subscription quota in three windows: rolling 5h, weekly, and monthly, each with used and remaining percentages and a reset countdown.
+- Click a badge to refresh all of them. Data refreshes itself every minute by default, configurable down to 30 seconds.
+- API keys stay in the Harness credential store (`~/.dsh/.credentials.yaml`) and never reach the browser.
+- The settings page manages the provider list (enable/disable, order), per-provider keys, balance and quota details, badge visibility, and position reset.
 
 ## Installation
 
@@ -68,13 +67,14 @@ If you would rather not touch your profile, paste the plugin into any DSH Web GU
 | DeepSeek | `GET https://api.deepseek.com/user/balance` | API Key (`sk-...`) | total / granted / topped-up (CNY) |
 | Moonshot (Kimi) | `GET https://api.moonshot.cn/v1/users/me/balance` | API Key (`sk-...`) | available / voucher / cash (CNY) |
 | OpenAI | `GET https://api.openai.com/dashboard/billing/credit_grants` | Browser session token (`sess-...`) | OpenAI offers no API-key balance endpoint; session tokens expire |
+| OpenCode Go | `GET https://opencode.ai/zen/go/v1/usage` | API key (usually `OPENCODE_GO_API_KEY`, written by the DSH Models page) | subscription quota: rolling 5h / weekly / monthly, each with used and remaining percentage plus reset time |
 | Custom | any GET endpoint (Bearer auth) | your own | JSON field paths like `data.available_balance` or `balance_infos[0].total_balance`, such as relay stations |
 
 ## Security
 
 - The browser only sees whether a key is configured. The plaintext key is never sent back to the page.
 - Keys are stored by the Harness credential service (`~/.dsh/.credentials.yaml`), the same place DSH keeps its other secrets.
-- curl receives `AI_BALANCE_KEY` through `env`, so it never appears in process listings.
+- Requests use native fetch (packaged install) or `curl` with the key via environment variable (dynamic plugin). Either way the key never lands in process listings or the browser.
 
 ## Repository layout
 
