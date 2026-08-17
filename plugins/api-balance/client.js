@@ -40,7 +40,7 @@ return {
       '.apibal-bars{display:flex;flex-direction:column;gap:4px;margin:2px 0 8px;}',
       '.apibal-bar-row{display:flex;align-items:center;gap:8px;font-size:12px;}',
       '.apibal-bar-label{width:26px;opacity:0.7;flex:none;}',
-      '.apibal-bar-track{flex:0 0 72px;height:6px;border-radius:3px;background:rgba(128,128,128,0.25);overflow:hidden;}',
+      '.apibal-bar-track{flex:1 1 180px;min-width:120px;max-width:220px;height:6px;border-radius:3px;background:rgba(128,128,128,0.25);overflow:hidden;}',
       '.apibal-bar-fill{height:100%;border-radius:3px;}',
             '.apibal-bar-text{flex:1;min-width:0;text-align:right;opacity:0.8;font-variant-numeric:tabular-nums;white-space:nowrap;}',
       '.apibal-quota{flex-direction:column;align-items:flex-start;gap:2px;}',
