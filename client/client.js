@@ -52,6 +52,8 @@ window.__ModuleLoader__.load({ id: "dsh-api-balance-badge", factory: (require) =
       '.apibal-bar-track{flex:1;height:6px;border-radius:3px;background:rgba(128,128,128,0.25);overflow:hidden;}',
       '.apibal-bar-fill{height:100%;border-radius:3px;}',
             '.apibal-bar-text{width:158px;text-align:right;opacity:0.8;font-variant-numeric:tabular-nums;white-space:nowrap;flex:none;}',
+      '.apibal-bar-block{display:flex;flex-direction:column;gap:1px;}',
+      '.apibal-bar-reset{font-size:11px;opacity:0.7;text-align:right;padding-left:34px;font-variant-numeric:tabular-nums;white-space:nowrap;}',
       '.apibal-quota{flex-direction:column;align-items:flex-start;gap:2px;}',
       '.apibal-qhead{display:flex;align-items:center;gap:0.5em;}',
       '.apibal-qrows{display:flex;flex-direction:column;gap:1px;margin-top:2px;}',
@@ -402,14 +404,15 @@ window.__ModuleLoader__.load({ id: "dsh-api-balance-badge", factory: (require) =
           var w = res.windows[keys[i]];
           if (!w) continue;
           var pct = Math.min(100, Math.max(0, w.percent));
-          var text = "已用 " + pct + "% · 剩 " + w.remaining + "%";
-          if (w.resetsAt) text += " · " + fmtCountdown(w.resetsAt, state.now) + " 后重置";
+          var resetText = w.resetsAt ? "重置 " + fmtCountdown(w.resetsAt, state.now) : "";
           bars.push(
-            React.createElement("div", { key: keys[i], className: "apibal-bar-row" },
-              React.createElement("span", { className: "apibal-bar-label" }, QUOTA_LABELS[keys[i]]),
-              React.createElement("div", { className: "apibal-bar-track" },
-                React.createElement("div", { className: "apibal-bar-fill", style: { width: pct + "%", background: barColor(pct) } })),
-              React.createElement("span", { className: "apibal-bar-text" }, text)),
+            React.createElement("div", { key: keys[i], className: "apibal-bar-block" },
+              React.createElement("div", { className: "apibal-bar-row" },
+                React.createElement("span", { className: "apibal-bar-label" }, QUOTA_LABELS[keys[i]]),
+                React.createElement("div", { className: "apibal-bar-track" },
+                  React.createElement("div", { className: "apibal-bar-fill", style: { width: pct + "%", background: barColor(pct) } })),
+                React.createElement("span", { className: "apibal-bar-text" }, "已用 " + pct + "% · 剩 " + w.remaining + "%")),
+              resetText ? React.createElement("div", { className: "apibal-bar-reset" }, resetText) : null),
           );
         }
       }

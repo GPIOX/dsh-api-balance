@@ -1,7 +1,7 @@
 {
   "name": "dsh-api-balance-badge",
   "description": "DSH 悬浮 API 余额徽章：可拖动、可缩放、亚克力质感、文字随背景明暗自适应。支持 DeepSeek / Moonshot / OpenAI / 自定义接口。· A floating API-balance badge for DeepSeek Harness: draggable, resizable, acrylic, adaptive text color.",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "type": "module",
   "main": "lib/index.js",
   "license": "MIT",
