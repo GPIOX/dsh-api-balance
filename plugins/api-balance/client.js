@@ -42,7 +42,13 @@ return {
       '.apibal-bar-label{width:26px;opacity:0.7;flex:none;}',
       '.apibal-bar-track{flex:1;height:6px;border-radius:3px;background:rgba(128,128,128,0.25);overflow:hidden;}',
       '.apibal-bar-fill{height:100%;border-radius:3px;}',
-      '.apibal-bar-text{width:158px;text-align:right;opacity:0.8;font-variant-numeric:tabular-nums;white-space:nowrap;flex:none;}',
+            '.apibal-bar-text{width:158px;text-align:right;opacity:0.8;font-variant-numeric:tabular-nums;white-space:nowrap;flex:none;}',
+      '.apibal-quota{flex-direction:column;align-items:flex-start;gap:2px;}',
+      '.apibal-qhead{display:flex;align-items:center;gap:0.5em;}',
+      '.apibal-qrows{display:flex;flex-direction:column;gap:1px;margin-top:2px;}',
+      '.apibal-qrow{display:flex;gap:0.6em;white-space:nowrap;font-size:0.85em;}',
+      '.apibal-qlabel{opacity:0.7;width:1.8em;flex:none;}',
+      '.apibal-qval{font-variant-numeric:tabular-nums;}',
     ].join('\n'))
 
     const PROVIDER_LABELS = {
@@ -411,7 +417,11 @@ return {
       const b = getBadge(id)
       const cls = 'apibal-float'
         + (b.bgKind === 'dark' ? ' apibal-on-dark' : b.bgKind === 'light' ? ' apibal-on-light' : '')
-      return React.createElement('div', {
+      const resizeHandle = React.createElement('span', {
+        className: 'apibal-resize',
+        onPointerDown: function (e) { e.stopPropagation(); beginDrag(id, e, 'resize') },
+      })
+      const base = {
         className: cls,
         ref: function (node) { badgeEls[id] = node },
         style: {
@@ -421,14 +431,32 @@ return {
         },
         title: badgeTitle(res, err, id, label),
         onPointerDown: function (e) { beginDrag(id, e, 'move') },
-      },
+      }
+      if (res && res.type === 'quota' && res.windows) {
+        const w = res.windows
+        const keys = ['rolling', 'weekly', 'monthly']
+        const rows = []
+        for (let i = 0; i < keys.length; i++) {
+          const win = w[keys[i]]
+          if (!win) continue
+          rows.push(
+            React.createElement('div', { key: keys[i], className: 'apibal-qrow' },
+              React.createElement('span', { className: 'apibal-qlabel' }, QUOTA_LABELS[keys[i]]),
+              React.createElement('span', { className: 'apibal-qval' }, '剩 ' + win.remaining + '%')),
+          )
+        }
+        return React.createElement('div', Object.assign({}, base, { className: cls + ' apibal-quota' }),
+          React.createElement('div', { className: 'apibal-qhead' },
+            React.createElement('span', { className: 'apibal-ico' }, '💰'),
+            React.createElement('span', { className: 'apibal-prov' }, label)),
+          React.createElement('div', { className: 'apibal-qrows' }, rows),
+          resizeHandle)
+      }
+      return React.createElement('div', base,
         React.createElement('span', { className: 'apibal-ico' }, '💰'),
         React.createElement('span', { className: 'apibal-txt' }, badgeText(res, id)),
         React.createElement('span', { className: 'apibal-prov' }, label),
-        React.createElement('span', {
-          className: 'apibal-resize',
-          onPointerDown: function (e) { e.stopPropagation(); beginDrag(id, e, 'resize') },
-        }))
+        resizeHandle)
     }
 
     function App() {
