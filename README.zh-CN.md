@@ -68,6 +68,7 @@ dsh plugin --profile web remove dsh-api-balance-badge
 | Moonshot (Kimi) | `GET https://api.moonshot.cn/v1/users/me/balance` | API Key（`sk-...`） | 返回可用/赠送/现金余额（CNY） |
 | OpenAI | `GET https://api.openai.com/dashboard/billing/credit_grants` | 浏览器会话 token（`sess-...`） | 官方不支持用 API Key 查余额；会话 token 有时效 |
 | OpenCode Go | `GET https://opencode.ai/zen/go/v1/usage` | API Key（通常是 `OPENCODE_GO_API_KEY`，DSH 模型设置页已写入） | 订阅额度：5 小时滚动 / 每周 / 每月，各含已用与剩余百分比及重置时间 |
+| ClinePass | `GET https://api.cline.bot/api/v1/users/me/plan/usage-limits`（计划名另取 `GET .../plan`） | API Key（通常是 `CLINE_PASS_API_KEY`） | 订阅额度：5 小时滚动 / 每周 / 每月，各含已用与剩余百分比及重置时间；计划名与当前周期结束时间取自 `/plan` |
 | 自定义接口 | 任意 GET 接口（Bearer 鉴权） | 自填 | 支持 JSON 字段路径（如 `data.available_balance` 或 `balance_infos[0].total_balance`），适配中转站等 |
 
 ## 安全设计
