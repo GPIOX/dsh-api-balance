@@ -68,6 +68,7 @@ If you would rather not touch your profile, paste the plugin into any DSH Web GU
 | Moonshot (Kimi) | `GET https://api.moonshot.cn/v1/users/me/balance` | API Key (`sk-...`) | available / voucher / cash (CNY) |
 | OpenAI | `GET https://api.openai.com/dashboard/billing/credit_grants` | Browser session token (`sess-...`) | OpenAI offers no API-key balance endpoint; session tokens expire |
 | OpenCode Go | `GET https://opencode.ai/zen/go/v1/usage` | API key (usually `OPENCODE_GO_API_KEY`, written by the DSH Models page) | subscription quota: rolling 5h / weekly / monthly, each with used and remaining percentage plus reset time |
+| ClinePass | `GET https://api.cline.bot/api/v1/users/me/plan/usage-limits` (plan name from `GET .../plan`) | API key (usually `CLINE_PASS_API_KEY`) | subscription quota: rolling 5h / weekly / monthly, each with used and remaining percentage plus reset time; the plan name and period end come from `/plan` |
 | Custom | any GET endpoint (Bearer auth) | your own | JSON field paths like `data.available_balance` or `balance_infos[0].total_balance`, such as relay stations |
 
 ## Security

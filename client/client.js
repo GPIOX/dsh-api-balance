@@ -72,11 +72,12 @@ window.__ModuleLoader__.load({ id: "dsh-api-balance-badge", factory: (require) =
     var PROVIDER_LABELS = {
       deepseek: "DeepSeek",
       "opencode-go": "OpenCode Go",
+      "cline-pass": "ClinePass",
       moonshot: "Moonshot (Kimi)",
       openai: "OpenAI",
       custom: "自定义接口",
     };
-    var PROVIDER_ORDER_ALL = ["deepseek", "opencode-go", "moonshot", "openai", "custom"];
+    var PROVIDER_ORDER_ALL = ["deepseek", "opencode-go", "cline-pass", "moonshot", "openai", "custom"];
     var QUOTA_LABELS = { rolling: "5h", weekly: "周", monthly: "月" };
     var BADGE_BASE = { x: 12, y: 12 };
     var BADGE_STACK = 46;
@@ -361,6 +362,7 @@ window.__ModuleLoader__.load({ id: "dsh-api-balance-badge", factory: (require) =
       if (p === "moonshot") return "使用 Moonshot/Kimi 开放平台 API Key（sk-...）";
       if (p === "openai") return "OpenAI 官方不支持用 API Key 查余额：请粘贴浏览器登录后的会话 token（sess-...），有效期有限";
       if (p === "opencode-go") return "OpenCode Go 订阅额度：密钥通常已由 DSH 模型设置页写入 OPENCODE_GO_API_KEY，一般无需在这里填写";
+      if (p === "cline-pass") return "ClinePass 订阅额度：密钥已由 ClinePass provider 写入 CLINE_PASS_API_KEY，一般无需在这里填写";
       return "适用于中转站等自建接口：填接口地址与 JSON 字段路径（如 data.balance 或 balance_infos[0].total_balance）";
     }
 
@@ -396,6 +398,7 @@ window.__ModuleLoader__.load({ id: "dsh-api-balance-badge", factory: (require) =
           if (w.resetsAt) line += " · " + fmtCountdown(w.resetsAt, state.now) + " 后重置";
           t += "\n" + line;
         }
+        if (res.extra) t += "\n" + res.extra;
       }
       return t;
     }
@@ -585,6 +588,7 @@ window.__ModuleLoader__.load({ id: "dsh-api-balance-badge", factory: (require) =
           },
             opt("deepseek", "DeepSeek"),
             opt("opencode-go", "OpenCode Go"),
+            opt("cline-pass", "ClinePass"),
             opt("moonshot", "Moonshot (Kimi)"),
             opt("openai", "OpenAI"),
             opt("custom", "自定义接口"))),
